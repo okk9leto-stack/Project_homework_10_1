@@ -6,32 +6,17 @@ def get_mask_card_number(number: str) -> str:
     7000792289606361 - входной аргумент, 7000 79** **** 6361 - выход функции"""
 
     # number = input('Введите номер карты из 16 цифр: например 7000792289606364: ///  ')
-    number_1 = ""
-    number_2 = ""
+    number = number.replace(" ", "")
 
-    for i, num in enumerate(number):
-        if i in [
-            0,
-            1,
-            2,
-            3,
-            4,
-            5,
-            len(number) - 4,
-            len(number) - 3,
-            len(number) - 2,
-            len(number) - 1,
-            len(number) - 4,
-        ]:
-            number_1 += num
-        else:
-            number_1 += "*"
-    # print (number_1)
+    if number == "":
+        return "Ошибка: Вы не ввели номер карты"
+    if not number.isdigit():
+        return "Ошибка: номер карты должен состоять только из цифр"
+    if len(number) != 16:
+        return "Ошибка: неверная длина номера"
 
-    for i_1 in range(0, len(number_1), 4):
-        number_2 += number_1[i_1 : i_1 + 4] + " "
-    # print("Маска номера карты: ", end="")
-    return number_2[:-1]
+    mask = f"{number[:4]} {number[4:6]}** **** {number[-4:]}"
+    return mask
 
 
 def get_mask_account(number: str) -> str:
@@ -40,12 +25,20 @@ def get_mask_account(number: str) -> str:
     То есть видны только последние 4 цифры номера, а перед ними — две звездочки. Пример работы функции:
     73654108430135874305  # входной аргумент, **4305  # выход функции"""
 
+    number = number.replace(" ", "")
+
+    if number == "":
+        raise ValueError("Ошибка: Вы не ввели номер счета")
+    if not number.isdigit():
+        raise ValueError("Ошибка: номер счета должен состоять только из цифр")
+    if len(number) != 20:
+        raise ValueError("Ошибка: неверная длина номера")
+
     mask_account = f"**{number[-4:]}"
-    # print("Маска номера счета: ", end="")
     return mask_account
 
 
-# Вызов функций:
-if __name__ == "__main__":
-    print(get_mask_card_number(input("Введите номер карты из 16 цифр: например 7000792289606364: ///  ")))
-    print(get_mask_account(input("Введите номер account: например 736541084301358743054: ///   ")))
+# Вызов функций: закомменчено, т.к. снижает % покрытия тестами
+# if __name__ == "__main__":
+#     print(get_mask_card_number(input("Введите номер карты из 16 цифр: например 7000792289606364: ///  ")))
+#     print(get_mask_account(input("Введите номер account: например 736541084301358743054: ///   ")))
