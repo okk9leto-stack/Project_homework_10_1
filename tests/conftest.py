@@ -24,19 +24,5 @@ def dict_state() -> list[dict]:
 
 
 @pytest.fixture()
-def cards_accounts_numbers() -> list[str]:  # для def mask_account_card(card_acc_number: str) -> str^ in widget.py
-    return [
-        "Maestro 1596837868705199",
-        "MasterCard 7158300734726758",
-        "Visa Classic 6831982476737658",
-        "Visa Platinum 8990922113665229",
-        "Visa Gold 5999414228426353",
-        "Счет 73654108430135874305",
-        "Счет 64686473678894779589",
-        "Счет 35383033474447895560",
-    ]
-
-
-@pytest.fixture()
 def date_full_format() -> str:  # для def get_date(date_in_full_format: str) -> str^ in widget.py
     return "2024-03-11T02:26:18.671407"
