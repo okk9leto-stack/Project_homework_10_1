@@ -1,7 +1,5 @@
 import pytest
 
-# from src.masks import get_mask_account
-# from src.masks import get_mask_card_number
 from src.widget import get_date
 from src.widget import mask_account_card
 
@@ -44,9 +42,14 @@ def test_mask_account_card_parametrize(card_acc_number: str, expected: str) -> N
 
 
 # пробел или пусто
-def test_mask_account_card_whitespace() -> None:
+def test_mask_account_card_whitespace_1() -> None:
     with pytest.raises(ValueError, match="введите реквизиты карты|счета"):
         mask_account_card(" ")
+
+
+def test_mask_account_card_whitespace_2() -> None:
+    with pytest.raises(ValueError, match="введите реквизиты карты|счета"):
+        mask_account_card("")
 
 
 # другие нестандартные случаи ввода даты, влияющие на итоговую дату

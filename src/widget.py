@@ -6,11 +6,11 @@ def mask_account_card(card_acc_number: str) -> str:
     и возвращает строку с замаскированным номером"""
 
     # Примеры работы функции:
-    # Visa Platinum 7000792289606361  --> Visa Platinum 7000 79** **** 6361 #  для карты
-    # Счет 73654108430135874305  --> Счет **4305  # для счета
-    # Примеры входных данных: Maestro 1596837868705199   MasterCard 7158300734726758
-    # Visa Classic 6831982476737658  Visa Platinum 8990922113665229  Visa Gold 5999414228426353
-    # Счет 73654108430135874305    Счет 64686473678894779589    Счет 35383033474447895560
+    # Visa Platinum 7000792289606361 --> Visa Platinum 7000 79** **** 6361 # для карты
+    # Счет 73654108430135874305 --> Счет **4305 # для счета
+    # Примеры входных данных: Maestro 1596837868705199 MasterCard 7158300734726758
+    # Visa Classic 6831982476737658 Visa Platinum 8990922113665229 Visa Gold 5999414228426353
+    # Счет 73654108430135874305 Счет 64686473678894779589 Счет 35383033474447895560
 
     if card_acc_number.replace(" ", "") == "":
         raise ValueError("Ошибка: введите реквизиты карты|счета")
@@ -52,14 +52,12 @@ def get_date(date_in_full_format: str) -> str | None:
     if int(day) > 31 or int(month) > 12:
         raise ValueError("Ошибка: формат даты некорректный")
 
-    if short_date > "01.01.0000":
-        return short_date
+    return short_date
 
 
-# Вызов функциий
-# закомменчено, т.к. снижает % покрытия тестами
-if __name__ == "__main__":
-    result = mask_account_card(input("Введите реквизиты карты или счета:__"))
-    print(result)
-    # fofmated_date = get_date(input("Введите дату в формате 2024-03-11T02:26:18.671407:__"))
-    # print(fofmated_date)
+# Вызов функциий # закомменчено, т.к. снижает % покрытия тестами
+# if __name__ == "__main__":
+#     result = mask_account_card(input("Введите реквизиты карты или счета:__"))
+#     print(result)
+#     fofmated_date = get_date(input("Введите дату в формате 2024-03-11T02:26:18.671407:__"))
+#     print(fofmated_date)
