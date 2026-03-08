@@ -1,6 +1,5 @@
 import pytest
 
-
 @pytest.fixture
 def card_number() -> str:  # для def get_mask_card_number(number: str) -> str: in masks
     return "7000792289606361"
