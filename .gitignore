@@ -217,6 +217,7 @@ __marimo__/
 
 # прочее
 .flake8
-__init__.py
+#__init__.py
 poetry.lock
 pyproject.toml
+lesson*
