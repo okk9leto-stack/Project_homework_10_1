@@ -387,8 +387,12 @@ state.
 3.4 Покрытие тестами: **модуль generators**
 
 #### Функция `filter_by_currency`
-- 1
-- 2
+- Фильтр транзакции по заданной валюте
+- Отсутствие заданной валюты
+- Пустой список
+- Список с битыми данными
+- Случаи, когда итератор должен выдать StopIteration
+- Некорректные данные по ветке except (KeyError, ValueError, TypeError)
 
 #### Функция `transaction_descriptions`
 - 1
@@ -419,4 +423,6 @@ state.
 Все тесты:
 ```
 pytest tests/ -v
+pytest tests/ --cov -v
+
 ```
