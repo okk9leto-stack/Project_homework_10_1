@@ -1,53 +1,44 @@
-from typing import Dict
-from typing import List
 from typing import Generator
 
-def filter_by_currency (transactions_list:list|dict, currency:str) -> Generator:
-    '''
+
+def filter_by_currency(transactions_list: list | dict, currency: str) -> Generator:
+    """
     Функция filter_by_currency принимает список словарей на вход
     и возвращает итератор, который поочередно выдает транзакции,
     где валюта операции соответствует заданной (например, USD)
-    '''
-    #currency_transactions = []
+    """
     for x in transactions_list:
         try:
             if x["operationAmount"]["currency"]["code"] == currency:
                 yield x
-        except (KeyError, ValueError, TypeError):
+        except KeyError, ValueError, TypeError:
             continue
 
-#
-# def transaction_descriptions (transactions_list:list|dict):
-#     '''
-#     Функция-генератор transaction_descriptions
-#     принимает на вход список словарей и использует
-#     yield для генерации значений по запросу
-#     '''
-#     pass
-#     '''
-#     Напишите генератор transaction_descriptions
-#     , который принимает список словарей с транзакциями и
-#     возвращает описание каждой операции по очереди.
-#
-#     Пример использования функции
-#     descriptions = transaction_descriptions(transactions)
-#     for _ in range(5):
-#         print(next(descriptions))
-#
-#     >>> Перевод организации
-#         Перевод со счета на счет
-#         Перевод со счета на счет
-#         Перевод с карты на карту
-#         Перевод организации
-#     '''
-#
-#
+
+def transaction_descriptions(transactions_list: list | dict) -> Generator:
+    """
+    Функция-генератор transaction_descriptions принимает на вход список словарей с транзакциями,
+    использует yield для генерации значений по запросу и возвращает описание каждой операции по очереди
+    """
+
+    for transaction in transactions_list:
+        # ВАЖНО: Весь код, который может вызвать ошибку доступа к ключам,
+        # должен находиться ВНУТРИ блока try.
+        try:
+            # # этой строкой мы выводим ТОЛЬКО инфо из 'description', а не всю запись
+            description = transaction["description"]
+            # Если мы все еще здесь, значит ключ найден, можно отдавать значение
+            yield description
+        except KeyError, ValueError, TypeError:
+            continue
+
+
 #
 # def card_number_generator (start, stop):
-#     '''
+#     """
 #     Генератор card_number_generator принимает значения
 #     start и stop в качестве аргумента
-#     '''
+#     """
 #     pass
 #     '''
 # Создайте генератор card_number_generator, который выдает номера банковских карт в формате
@@ -75,15 +66,15 @@ def filter_by_currency (transactions_list:list|dict, currency:str) -> Generator:
 #             "id": 594226727, "state": "CANCELED", "date": "2018-09-12T21:27:25.241689",
 #             "operationAmount": {"amount": "67314.70",
 #                 "currency": {"name": "%", "code": "%"}},
-#             "description": "Перевод организации", "from": "Visa Platinum 1246377376343588",
+#             "description": None, "from": "Visa Platinum 1246377376343588",
 #             "to": "Счет 14211924144426031657"        },
 #         {   "id": 594226727, "state": "CANCELED", "date": "2018-09-12T21:27:25.241689",
 #             "operationAmount": {"amount": "67314.70",
 #                                 "currency": ''},
-#             "description": "Перевод организации", "from": "Visa Platinum 1246377376343588",
+#             "from": "Visa Platinum 1246377376343588",
 #             "to": "Счет 14211924144426031657"        }]
 #
-#     transactions = [ # is valide
+#     transactions = [ # is_valid
 #         {
 #             "id": 939719570,
 #             "state": "EXECUTED",
@@ -159,13 +150,13 @@ def filter_by_currency (transactions_list:list|dict, currency:str) -> Generator:
 #             "from": "Visa Platinum 1246377376343588",
 #             "to": "Счет 14211924144426031657"
 #         }]
-#     # выполнение кода
+# выполнение кода
 #     usd_transactions = filter_by_currency(transactions, "USD")
-#     print("--- 1. Работа с итератором через цикл for (все элементы) ---")
+#     print("--- 1. filter_by_currency_ Работа с итератором через цикл for (все элементы) ---")
 #     for one_transaction in usd_transactions:
 #         print(one_transaction)
 #
-#     print("\n--- 2. Работа через for _ in range(2) (ограниченный вывод) ---")
+#     print("\n--- 2. filter_by_currency_ Работа через for _ in range(2) (ограниченный вывод) ---")
 #     usd_transactions = filter_by_currency(transactions, "EUR")
 #     # используем range(2), чтобы выполнить тело цикла ровно 2 раза
 #     my_range = 4
@@ -178,7 +169,7 @@ def filter_by_currency (transactions_list:list|dict, currency:str) -> Generator:
 #             print(f"В списке меньше {my_range} транзакций с такой валютой")
 #             break
 #
-#     print("\n--- 3. Работа через next() (ручной вызов) ---")
+#     print("\n--- 3. filter_by_currency_ Работа через next() (ручной вызов) ---")
 #     usd_transactions = filter_by_currency(transactions, "RUB")
 #     try:
 #         print("Первая:", next(usd_transactions))
@@ -187,9 +178,36 @@ def filter_by_currency (transactions_list:list|dict, currency:str) -> Generator:
 #     except StopIteration:
 #         print("Больше транзакций не найдено")
 #
-#     print("\n--- 4. Работа через next() (совсем ручной вызов) ---")
+#     print("\n--- 4. filter_by_currency_ Работа через next() (совсем ручной вызов) ---")
 #     usd_transactions = filter_by_currency(transactions_2, "USD")
 #     print("Первая:", next(usd_transactions))
 #     print("Вторая:", next(usd_transactions))
 #     print("Третья:", next(usd_transactions))
 #     print("Четвертая:", next(usd_transactions))
+#
+#
+#     print("\n--- 5. _transaction_descriptions Работа через for _ in range(4) (ограниченный вывод) ---")
+#     descriptions = transaction_descriptions(transactions_2)
+#     # используем range(5), чтобы выполнить тело цикла ровно 5 раз
+#     my_range = 6
+#
+#     for _ in range(my_range):
+#         try:
+#             # Внутри цикла мы принудительно запрашиваем следующий элемент
+#             print(next(descriptions))
+#         except StopIteration:
+#             # Если в генераторе меньше 5 нужных элементов, выйдет ошибка StopIteration
+#             print(f"В списке меньше {my_range} транзакций")
+#             break
+#
+# ''' Пример использования функции^
+#     descriptions = transaction_descriptions(transactions)
+#         for _ in range(5):
+#         print(next(descriptions))
+#
+#     >>> Перевод организации
+#         Перевод со счета на счет
+#         Перевод со счета на счет
+#         Перевод с карты на карту
+#         Перевод организации
+#     '''

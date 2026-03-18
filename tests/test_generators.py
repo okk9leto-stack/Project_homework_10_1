@@ -1,12 +1,12 @@
 import pytest
 
 from src.generators import filter_by_currency
+from src.generators import transaction_descriptions
 
-# from src.generators import transaction_descriptions
 # from src.generators import card_number_generator
 
 
-def test_filter_by_currency_RUB(transactions: list | dict) -> None:
+def test_filter_by_currency_rub(transactions: list | dict) -> None:
     """
     Функция filter_by_currency принимает список словарей на вход
     и возвращает итератор, который поочередно выдает транзакции,
@@ -37,7 +37,7 @@ def test_filter_by_currency_RUB(transactions: list | dict) -> None:
         next(usd_transactions)
 
 
-def test_filter_by_currency_USD(transactions: list | dict) -> None:
+def test_filter_by_currency_usd(transactions: list | dict) -> None:
     """
     Функция filter_by_currency принимает список словарей на вход
     и возвращает итератор, который поочередно выдает транзакции,
@@ -77,7 +77,7 @@ def test_filter_by_currency_USD(transactions: list | dict) -> None:
         next(usd_transactions)
 
 
-def test_filter_by_currency_EUR(transactions: list | dict) -> None:
+def test_filter_by_currency_eur(transactions: list | dict) -> None:
     """
     Функция filter_by_currency принимает список словарей на вход
     и возвращает итератор, который поочередно выдает транзакции,
@@ -109,7 +109,7 @@ def test_filter_by_currency_null(transactions_null: list = []) -> None:
         ([{"bad_key": "data"}], "USD"),  # Случай 3: Список с битыми данными
     ],
 )
-def test_filter_by_currency_StopIteration(input_data: list, currency: str) -> None:
+def test_filter_by_currency_stop_iteration(input_data: list, currency: str) -> None:
     """Тестируем все случаи, когда итератор должен сразу выдать StopIteration"""
     usd_transactions = filter_by_currency(input_data, currency)
     with pytest.raises(StopIteration):
@@ -142,22 +142,64 @@ def test_filter_by_currency_errors_cases(input_data: list, currency: str, expect
     assert len(result_list) == expected_count
 
 
-#
-#
-# def test_transaction_descriptions ()-> None:
-#     '''
-#     Функция-генератор transaction_descriptions
-#     принимает на вход список словарей и использует
-#     yield для генерации значений по запросу.
-#     '''
+def test_transaction_descriptions_standard(transactions: list | dict) -> None:
+    """
+    Тест стандартного вывода значений из descriptions/
+    Тестируем выдачу StopIteration при запросе транзакций больше, чем их есть
+    """
+    descriptions = transaction_descriptions(transactions)  # transactions фикстура
+    assert (next(descriptions)) == "Перевод организации"
+    assert (next(descriptions)) == "Перевод со счета на счет"
+    assert (next(descriptions)) == "Перевод со счета на счет"
+    assert (next(descriptions)) == "Перевод с карты на карту"
+    assert (next(descriptions)) == "Перевод организации"
+    # далее ожидаем, что следующий вызов вызовет ошибку StopIteration (в списке только 5 транзакций)
+    with pytest.raises(StopIteration):
+        next(descriptions)
+
+
+def test_transaction_descriptions_null(transactions_null: list = []) -> None:
+    """
+    Тест пустого списка
+    """
+    descriptions = transaction_descriptions(transactions_null)  # transactions фикстура
+    # ожидаем ошибку
+    with pytest.raises(StopIteration):
+        next(descriptions)  # transactions фикстура
+
+
+@pytest.mark.parametrize(  # Тестируем прогон некорректных данных для ветки except (KeyError, ValueError, TypeError)
+    "input_data_2, expected_count",
+    [
+        # 1. KeyError: отсутствует ключ "description"
+        ([{"id": 1, "state": "EXECUTED"}], 0),
+        # 2. TypeError: вместо словаря в списке лежит число или None
+        ([123, None, {"id": 2}], 0),
+        # 3. Смешанные данные: "битый" объект + "хороший" объект
+        # Проверяет, что 'continue' не ломает цикл и мы доходим до валидных данных
+        ([{"bad": "data"}, {"description": "Перевод с карты на карту"}], 1),
+        # 4. При наличии ключа "description" выводит из него и None, и пустые, и числовые значения
+        ([{"description": None}], 1),
+        ([{"description": ""}], 1),
+        ([{"description": 123}], 1),
+    ],
+)
+def test_transaction_descriptions_errors_cases(input_data_2: list, expected_count: int) -> None:
+    """
+    Тестируем прогон некорректных данных для ветки except (KeyError, ValueError, TypeError).
+    """
+    result_list = list(transaction_descriptions(input_data_2))
+    assert len(result_list) == expected_count
+
+
 #     pass
 #
 #
 # def test_card_number_generator (start, stop)-> None:
-#     '''
+#     """
 #     Генератор card_number_generator принимает значения
 #     start и stop в качестве аргумента
-#     '''
+#     """
 #     pass
 
 

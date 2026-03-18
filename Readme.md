@@ -395,8 +395,10 @@ state.
 - Некорректные данные по ветке except (KeyError, ValueError, TypeError)
 
 #### Функция `transaction_descriptions`
-- 1
-- 2
+- Стандартный вывод значений из descriptions
+- StopIteration при запросе транзакций больше, чем их есть
+- Пустой список
+- Некорректные данные по ветке except (KeyError, ValueError, TypeError)
 
 #### Функция `card_number_generator`
 - 1
