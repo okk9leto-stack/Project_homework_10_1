@@ -20,7 +20,6 @@ def transaction_descriptions(transactions_list: list | dict) -> Generator:
     Функция-генератор transaction_descriptions принимает на вход список словарей с транзакциями,
     использует yield для генерации значений по запросу и возвращает описание каждой операции по очереди
     """
-
     for transaction in transactions_list:
         # ВАЖНО: Весь код, который может вызвать ошибку доступа к ключам,
         # должен находиться ВНУТРИ блока try.
@@ -33,24 +32,30 @@ def transaction_descriptions(transactions_list: list | dict) -> Generator:
             continue
 
 
+def card_number_generator(start: int | str = 0, stop: int | str = 0) -> Generator:
+    """
+    Генератор card_number_generator принимает значения start и stop в качестве аргументов
+    выдает номера банковских карт в формате XXXX XXXX XXXX XXXX. Генератор может сгенерировать номера карт
+    в заданном диапазоне от 0000 0000 0000 0001 до 9999 9999 9999 9999
+    """
+    try:
+        # Преобразуем входные данные в числа, чтобы точно число
+        s_start = int(start)
+        s_stop = int(stop)
+    except ValueError, TypeError:
+        # Если переданы совсем некорректные данные, выходим
+        return
+    if s_start >= 0 and s_stop > 0 and s_start <= s_stop and s_stop <= 10**16:
+        for number in range(s_start, s_stop + 1):
+            card_number = str(number).zfill(16)  # заполняем нулями до 16 цифр
+            formatted_card_number = f"{card_number[:4]} {card_number[4:8]} {card_number[8:12]} {card_number[12:16]}"
+            yield formatted_card_number
+
+
 #
-# def card_number_generator (start, stop):
-#     """
-#     Генератор card_number_generator принимает значения
-#     start и stop в качестве аргумента
-#     """
-#     pass
-#     '''
-# Создайте генератор card_number_generator, который выдает номера банковских карт в формате
-# XXXX XXXX XXXX XXXX , где X
-#  — цифра номера карты. Генератор может сгенерировать номера карт
-#  в заданном диапазоне от 0000 0000 0000 0001 до 9999 9999 9999 9999.
-# Генератор должен принимать начальное и конечное значения для генерации диапазона номеров.
-#
-# Пример использования функции
-# for card_number in card_number_generator(1, 5):
-#     print(card_number)
-#
+# for card_number in card_number_generator (0,1): #(9999999999999998,10000000000000000):
+#      print(card_number)
+# Пример использования функции:
 # >>> 0000 0000 0000 0001
 #     0000 0000 0000 0002
 #     0000 0000 0000 0003
@@ -210,4 +215,20 @@ def transaction_descriptions(transactions_list: list | dict) -> Generator:
 #         Перевод со счета на счет
 #         Перевод с карты на карту
 #         Перевод организации
+#     '''
+#
+# def card_number_generator (start:int|str=0, stop:int|str=0)-> Generator:
+#     """
+#     Генератор card_number_generator принимает значения start и stop в качестве аргументов
+#     выдает номера банковских карт в формате XXXX XXXX XXXX XXXX. Генератор может сгенерировать номера карт
+#     в заданном диапазоне от 0000 0000 0000 0001 до 9999 9999 9999 9999
+#     """
+# for card_number in card_number_generator(9995,10001):
+#      print(card_number)
+# Пример использования функции:
+# >>> 0000 0000 0000 0001
+#     0000 0000 0000 0002
+#     0000 0000 0000 0003
+#     0000 0000 0000 0004
+#     0000 0000 0000 0005
 #     '''

@@ -1,9 +1,8 @@
 import pytest
 
+from src.generators import card_number_generator
 from src.generators import filter_by_currency
 from src.generators import transaction_descriptions
-
-# from src.generators import card_number_generator
 
 
 def test_filter_by_currency_rub(transactions: list | dict) -> None:
@@ -192,15 +191,54 @@ def test_transaction_descriptions_errors_cases(input_data_2: list, expected_coun
     assert len(result_list) == expected_count
 
 
-#     pass
-#
-#
-# def test_card_number_generator (start, stop)-> None:
-#     """
-#     Генератор card_number_generator принимает значения
-#     start и stop в качестве аргумента
-#     """
-#     pass
+def test_card_number_generator_standard() -> None:
+    """
+    Генератор card_number_generator принимает значения
+    start и stop в качестве аргумента
+    """
+    mask_card_number = card_number_generator(5, 8)
+    assert (next(mask_card_number)) == "0000 0000 0000 0005"
+    assert (next(mask_card_number)) == "0000 0000 0000 0006"
+    assert (next(mask_card_number)) == "0000 0000 0000 0007"
+    assert (next(mask_card_number)) == "0000 0000 0000 0008"
+
+
+@pytest.mark.parametrize(  # Тестируем прогон некорректных данных + для ветки except (ValueError, TypeError)
+    "t_start, t_stop, expected_count_3",
+    [
+        # 1. t_start == t_stop
+        (5, 5, 1),
+        # 2. t_start =0 or  t_stop=0
+        (0, 0, 0),
+        (1, 0, 0),
+        (-1, 0, 0),
+        # 3. t_start > t_stop
+        (5, 4, 0),
+        # 4. введен только t_start
+        (1, None, 0),
+        # 5. t_stop > 10**16:
+        (9999999999999998, 10000000000000001, 0),
+        (9999999999999998, 10000000000000000, 3),
+        # другое
+        ("q", 1, 0),
+    ],
+)
+def test_card_number_generator_errors_cases(t_start: int | str, t_stop: int | str, expected_count_3: int) -> None:
+    """
+    Тестируем прогон некорректных данных для ветки except (ValueError, TypeError).
+    """
+    result_list = list(card_number_generator(t_start, t_stop))
+    assert len(result_list) == expected_count_3
+
+
+def test_card_number_generator_null() -> None:
+    """
+    Тест пустого списка
+    """
+    result = card_number_generator()  # transactions фикстура
+    # ожидаем ошибку
+    with pytest.raises(StopIteration):
+        next(result)  # transactions фикстура
 
 
 """
