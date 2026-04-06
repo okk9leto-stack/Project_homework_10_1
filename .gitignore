@@ -221,3 +221,4 @@ __marimo__/
 poetry.lock
 pyproject.toml
 lesson*
+*.txt

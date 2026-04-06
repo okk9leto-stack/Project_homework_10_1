@@ -25,7 +25,7 @@
 
 #### 2._ОПИСАНИЕ РАБОТЫ ФУНКЦИЙ:
 
-**2.1 МОДУЛЬ masks (функции `get_mask_card_number`, `get_mask_account`)**
+**2.1 МОДУЛЬ [masks.py](src/masks.py) (функции `get_mask_card_number`, `get_mask_account`)**
 
 2.1-1  Функция `get_mask_card_number`: 
 ```
@@ -72,7 +72,7 @@ def get_mask_account(number: str) -> str:
 Пример работы функции: 73654108430135874305  # входной аргумент, **4305  # выход функции
 
 
-**2.2 МОДУЛЬ processing (функции `filter_by_state`, `sort_by_date`)**
+**2.2 МОДУЛЬ [processing.py](src/processing.py) (функции `filter_by_state`, `sort_by_date`)**
 
 2.2-1  Функция `filter_by_state`: 
 
@@ -139,7 +139,7 @@ print(sorted_transactions)
     # {'id': 939719570, 'state': 'EXECUTED', 'date': '2018-06-30T02:08:58.425572'}]
 
 
-**2.3 МОДУЛЬ widget (функции `mask_account_card`, `get_date`)**
+**2.3 МОДУЛЬ [widget.py](src/widget.py) (функции `mask_account_card`, `get_date`)**
 
 2.3-1  Функция `mask_account_card`: 
 
@@ -213,10 +213,26 @@ def get_date(date_in_full_format: str) -> str | None:
     # 2024-03-11T02:26:18.671407 --> 11.03.2024
 
 
-**2.4 МОДУЛЬ generators (функции `filter_by_currency`, `transaction_descriptions`, `card_number_generator`)**
+**2.4 МОДУЛЬ [generators.py](src/generators.py)[generators](src/ (функции `filter_by_currency`, `transaction_descriptions`, `card_number_generator`)**
 
 2.4-1 Функция `filter_by_currency`
 ```
+from typing import Generator
+
+
+def filter_by_currency(transactions_list: list | dict, currency: str) -> Generator:
+    """
+    Функция filter_by_currency принимает список словарей на вход
+    и возвращает итератор, который поочередно выдает транзакции,
+    где валюта операции соответствует заданной (например, USD)
+    """
+    for x in transactions_list:
+        try:
+            if x["operationAmount"]["currency"]["code"] == currency:
+                yield x
+        except KeyError, ValueError, TypeError:
+            continue
+
 ```
 Функция filter_by_currency принимает список словарей на вход
 и возвращает итератор, который поочередно выдает транзакции, 
@@ -261,6 +277,22 @@ def get_date(date_in_full_format: str) -> str | None:
 
 2.4-2 Функция-генератор `transaction_descriptions`
 ```
+def transaction_descriptions(transactions_list: list | dict) -> Generator:
+    """
+    Функция-генератор transaction_descriptions принимает на вход список словарей с транзакциями,
+    использует yield для генерации значений по запросу и возвращает описание каждой операции по очереди
+    """
+    for transaction in transactions_list:
+        # ВАЖНО: Весь код, который может вызвать ошибку доступа к ключам,
+        # должен находиться ВНУТРИ блока try.
+        try:
+            # # этой строкой мы выводим ТОЛЬКО инфо из 'description', а не всю запись
+            description = transaction["description"]
+            # Если мы все еще здесь, значит ключ найден, можно отдавать значение
+            yield description
+        except KeyError, ValueError, TypeError:
+            continue
+
 ```
 Функция-генератор transaction_descriptions принимает на вход список словарей и использует 
 yield для генерации значений по запросу/ возвращает описание каждой операции по очереди.
@@ -280,6 +312,24 @@ yield для генерации значений по запросу/ возвр
 
 2.4-3 Генератор `card_number_generator`
 ```
+def card_number_generator(start: int | str = 0, stop: int | str = 0) -> Generator:
+    """
+    Генератор card_number_generator принимает значения start и stop в качестве аргументов
+    выдает номера банковских карт в формате XXXX XXXX XXXX XXXX. Генератор может сгенерировать номера карт
+    в заданном диапазоне от 0000 0000 0000 0001 до 9999 9999 9999 9999
+    """
+    try:
+        # Преобразуем входные данные в числа, чтобы точно число
+        s_start = int(start)
+        s_stop = int(stop)
+    except ValueError, TypeError:
+        # Если переданы совсем некорректные данные, выходим
+        return
+    if s_start >= 0 and s_stop > 0 and s_start <= s_stop and s_stop <= 10**16:
+        for number in range(s_start, s_stop + 1):
+            card_number = str(number).zfill(16)  # заполняем нулями до 16 цифр
+            formatted_card_number = f"{card_number[:4]} {card_number[4:8]} {card_number[8:12]} {card_number[12:16]}"
+            yield formatted_card_number
 ```
 Генератор card_number_generator принимает значения start и stop в качестве аргумента
 Генератор card_number_generator выдает номера банковских карт в формате 
@@ -299,6 +349,77 @@ XXXX XXXX XXXX XXXX , где X
         0000 0000 0000 0004
         0000 0000 0000 0005
 
+**2.5 МОДУЛЬ [decorators.py](src/decorators.py) (функция/декоратор `log`)**
+
+2.5-1 Декоратор `log`
+```
+ def wrapper(func: F) -> F:
+        @wraps(func)
+        def inner(*args: Any, **kwargs: Any) -> Any:
+            time_11 = time.ctime()
+            try:
+                time_1 = time.time()
+                result = func(*args, **kwargs)
+                time_2 = time.time()
+                time_22 = time.ctime()
+                message = (
+                    f"Функция {func.__name__} Результат: ok\n Старт: {time_11}\n Стоп: {time_22}\n "
+                    f"Время обработки: {time_2 - time_1: .6f}\n Аргументы {args}, {kwargs} \n "
+                    f'Результат {result}\n {"-"*50}  end \n'
+                )
+                if filename:
+                    current_directory = os.path.dirname(__file__)
+                    path_to_filename = str(os.path.join(current_directory, str(filename)))
+                    with open(path_to_filename, "a", encoding="utf-8") as file:
+                        file.write(message)
+                else:
+                    print(message)
+                return result
+            except Exception as e:
+                error_type = type(e).__name__  # Получаем чистое название ошибки (например, TypeError)
+                message = (
+                    f"Функция {func.__name__}\n Результат: error {error_type} ({e})\n "
+                    f'Старт: {time_11}\n Аргументы {args}, {kwargs} \n {"-"*50} end \n'
+                )
+                if filename:
+                    current_directory = os.path.dirname(__file__)
+                    path_to_filename = str(os.path.join(current_directory, str(filename)))
+                    with open(path_to_filename, "a", encoding="utf-8") as file:
+                        file.write(message)
+                else:
+                    print(message)
+                return e
+
+        return inner  # type: ignore
+
+    return wrapper
+
+
+@log(filename="mylog.txt")
+def my_function(x: int, y: int) -> int:
+    return x + y
+
+```
+
+Декоратор log автоматически регистрирует детали выполнения функций,
+такие как время вызова, имя функции, передаваемые аргументы, результат выполнения и информация об ошибках.
+Это позволит обеспечить более глубокий контроль и анализ поведения программы в процессе ее выполнения.
+
+Пример использования декоратора log в консоль/файл:
+
+    Функция my_function Результат: ok
+    Старт: Sun Mar 29 09:37:37 2026
+    Стоп: Sun Mar 29 09:37:37 2026
+    Время обработки:  0.000001
+    Аргументы (1, 2), {}
+    Результат 3
+    -------------------------------------------------- end
+    
+    Функция my_function
+    Результат: error TypeError (unsupported operand type(s) for +: 'int' and 'str')
+    Старт: Sun Mar 29 10:16:58 2026
+    Аргументы (1, '2'), {}
+    -------------------------------------------------- end
 
 #### 3._ТЕСТИРОВАНИЕ МОДУЛЕЙ БАНКОВСКОГО ПРИЛОЖЕНИЯ:
 3.1 Общие сведения:
@@ -310,7 +431,7 @@ XXXX XXXX XXXX XXXX , где X
 - **generators** - функции для работы с массивами транзакций для обработки данных через генераторы 
 
 
-3.2 Покрытие тестами: **модуль masks**
+3.2 Покрытие тестами: **модуль [masks.py](src/masks.py)**
 #### Функции `get_mask_card_number`, `get_mask_account`
 -  Стандартные номера (16 цифр для карты, 20 для счета)
 -  Короткие/длинные номера (граничные случаи)
@@ -331,7 +452,7 @@ XXXX XXXX XXXX XXXX , где X
 - Проверка, что функция корректно обрабатывает входные данные, где номер счета меньше ожидаемой длины.
 ```
 
-3.3 Покрытие тестами: **модуль widget**
+3.3 Покрытие тестами: **модуль [test_widget.py](tests/test_widget.py)**
 #### Функция `mask_account_card`
 -  Автоматическое распознавание типа (карта/счет)
 -  Параметризованные тесты разных платежных систем
@@ -355,7 +476,7 @@ XXXX XXXX XXXX XXXX , где X
 - Проверка, что функция корректно обрабатывает входные строки, где отсутствует дата.
 ```
 
-3.4 Покрытие тестами: **модуль processing**
+3.4 Покрытие тестами: **модуль [test_processing.py](tests/test_processing.py)**
 
 #### Функция `filter_by_state`
 -  Фильтрация по различным статусам
@@ -384,7 +505,7 @@ state.
 - Тесты на работу функции с некорректными или нестандартными форматами дат.
 ```
 
-3.4 Покрытие тестами: **модуль generators**
+3.4 Покрытие тестами: **модуль [test_generators.py](tests/test_generators.py)**
 
 #### Функция `filter_by_currency`
 - Фильтр транзакции по заданной валюте
@@ -423,7 +544,15 @@ state.
 - Убедитесь, что генератор корректно обрабатывает крайние значения диапазона и правильно завершает генерацию.
 ```
 
-3.5 Запуск тестов
+3.5 Покрытие тестами: **модуль [test_decorators.py](tests/test_decorators.py)**
+
+#### Декоратор `log`
+- корректный ввод, файл не задан, функция возвращает правильный результат в консоль
+- файл не задан, при некорректных аргументах декоратор ловит TypeError, ValueError и другие ошибки и выводит в консоль
+- корректный ввод, файл задан, функция возвращает правильный результат в файл
+- файл задан, при некорректных аргументах декоратор ловит TypeError, ValueError и другие ошибки и выводит в файл
+
+3.6 Запуск тестов
 
 Все тесты:
 ```
