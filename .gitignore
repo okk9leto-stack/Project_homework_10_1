@@ -220,5 +220,10 @@ __marimo__/
 #__init__.py
 poetry.lock
 pyproject.toml
-lesson*
+*lesson_*
+*practic_*
+*.txt
+*png
+*csv
+*.json
 *.txt
