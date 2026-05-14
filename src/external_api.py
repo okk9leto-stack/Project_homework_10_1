@@ -7,19 +7,24 @@ from typing import Tuple
 import requests
 from dotenv import load_dotenv
 
-# Загрузка переменных из .env-файла
-load_dotenv()
 
-# Получение значения переменной API_KEY из .env-файла
-API_KEY = os.getenv("API_KEY")
+def get_api_key() -> str | None:
+    """Загружает переменные окружения и возвращает API_KEY."""
+    load_dotenv()  # Загрузка переменных из .env-файла
+    API_KEY = os.getenv("API_KEY")  # Получение значения переменной API_KEY из .env-файла
+    return API_KEY
 
 
 def date_date(date: str) -> str:
-    # 1. Парсим строку в объект. Обратите внимание на T между датой и временем.
-    date_full = datetime.datetime.strptime(date, "%Y-%m-%dT%H:%M:%S.%f")
-    # 2. Форматируем объект в строку нужного вам вида (например, ДД.ММ.ГГГГ)
-    date_new = date_full.strftime("%Y-%m-%d")
-    return date_new
+
+    try:
+        # 1. Парсим строку в объект. Обратите внимание на T между датой и временем.
+        date_full = datetime.datetime.strptime(date, "%Y-%m-%dT%H:%M:%S.%f")
+        # 2. Форматируем объект в строку нужного вам вида (например, ДД.ММ.ГГГГ)
+        date_new = date_full.strftime("%Y-%m-%d")
+        return date_new
+    except ValueError:
+        raise ValueError("корректный формат даты: 2018-04-22T17:01:46.885252")
 
 
 # Операции по конвертации валюты
@@ -29,12 +34,8 @@ def date_date(date: str) -> str:
 # amount) в рублях, тип данных float.
 # Если транзакция была в USD или EUR, происходит обращение к внешнему API
 # для получения текущего курса валют и конвертации суммы операции в рубли.
-#  {  "id": 123456789,
-# "state": "EXECUTED",
-# "date": "2019-04-19T12:02:30.129240",
-# "operationAmount": {
-#     "amount": "100.00",
-#     "currency": {"name": "USD", "code": "USD"}}}
+#  {  "id": 123456789, "state": "EXECUTED", "date": "2019-04-19T12:02:30.129240",
+# "operationAmount": {"amount": "100.00", "currency": {"name": "USD", "code": "USD"}}}
 # Сокрытие чувствительных данных
 # Ключи для авторизации в API конвертации валют скрыты в файле .env.
 # Собран шаблон файла .env с указанием названий всех переменных, необходимых для работы приложения.
@@ -56,7 +57,7 @@ def currency_conversion(transaction: Dict) -> Dict | Tuple[int, Dict]:
 
         # Создание заголовка с кодом доступа API
         # аналогично записи headers = {"apikey": "Pmtbk5HywReubmCx0quOdEBstCPboXff"}
-        headers = {"apikey": API_KEY}
+        headers = {"apikey": get_api_key()}
 
         try:
             # Отправка GET-запроса к API
@@ -93,15 +94,18 @@ def currency_conversion(transaction: Dict) -> Dict | Tuple[int, Dict]:
     return result_fin
 
 
-if __name__ == "__main__":
-    transaction = {
-        "id": 123456789,
-        "state": "EXECUTED",
-        "date": "2019-04-19T12:02:30.129240",
-        "operationAmount": {"amount": "100.00", "currency": {"name": "USD", "code": "USD"}},
-    }
-
-    print(currency_conversion(transaction))
+# if __name__ == "__main__":
+#     print (date_date("2018-04-22 T17:01:46.885252"))
+#
+# if __name__ == "__main__":
+#     transaction = {
+#         "id": 123456789,
+#         "state": "EXECUTED",
+#         "date": "2019-04-19T12:02:30.129240",
+#         "operationAmount": {"amount": "100.00", "currency": {"name": "USD", "code": "USD"}},
+#     }
+#     print(currency_conversion(transaction))
+    #
     # { "base": "USD",
     #   "date": "2026-05-01",
     #   "historical": true,
