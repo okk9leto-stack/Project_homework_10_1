@@ -215,15 +215,15 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 
-# прочее
-.flake8
-#__init__.py
-poetry.lock
-pyproject.toml
-*lesson_*
-*practic_*
-*.txt
-*png
-*csv
-#*.json
-*.txt
+## прочее
+#.flake8
+##__init__.py
+#poetry.lock
+#pyproject.toml
+#*lesson_*
+#*practic_*
+#*.txt
+#*png
+#*csv
+##*.json
+#*.txt

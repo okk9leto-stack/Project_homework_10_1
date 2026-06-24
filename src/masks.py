@@ -39,6 +39,6 @@ def get_mask_account(number: str) -> str:
 
 
 # Вызов функций: закомменчено, т.к. снижает % покрытия тестами
-# if __name__ == "__main__":
-#     print(get_mask_card_number(input("Введите номер карты из 16 цифр: например 7000792289606364: ///  ")))
-#     print(get_mask_account(input("Введите номер account: например 736541084301358743054: ///   ")))
+if __name__ == "__main__":
+    print(get_mask_card_number(input("Введите номер карты из 16 цифр: например 7000792289606364: ///  ")))
+    print(get_mask_account(input("Введите номер account: например 736541084301358743054: ///   ")))
