@@ -43,7 +43,7 @@ def log(filename: Optional[str] = None) -> Callable[[F], F]:
                 message = (
                     f"Функция {func.__name__} Результат: ok\n Старт: {time_11}\n Стоп: {time_22}\n "
                     f"Время обработки: {time_2 - time_1: .6f}\n Аргументы {args}, {kwargs} \n "
-                    f'Результат {result}\n {"-"*50}  end \n'
+                    f'Результат {result}\n {"-" * 50}  end \n'
                 )
                 if filename:
                     current_directory = os.path.dirname(__file__)
@@ -57,7 +57,7 @@ def log(filename: Optional[str] = None) -> Callable[[F], F]:
                 error_type = type(e).__name__  # Получаем чистое название ошибки (например, TypeError)
                 message = (
                     f"Функция {func.__name__}\n Результат: error {error_type} ({e})\n "
-                    f'Старт: {time_11}\n Аргументы {args}, {kwargs} \n {"-"*50} end \n'
+                    f'Старт: {time_11}\n Аргументы {args}, {kwargs} \n {"-" * 50} end \n'
                 )
                 if filename:
                     current_directory = os.path.dirname(__file__)

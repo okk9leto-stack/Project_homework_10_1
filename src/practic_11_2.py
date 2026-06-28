@@ -2,7 +2,7 @@ import math
 import re
 
 
-def sum_divisible_by_3_or_5(lst:list[int])->int:
+def sum_divisible_by_3_or_5(lst: list[int]) -> int:
     """
     Функция принимает на вход список чисел и возвращает сумму всех элементов списка,
     которые делятся на 3 или 5 без остатка.
@@ -13,41 +13,43 @@ def sum_divisible_by_3_or_5(lst:list[int])->int:
             result += num
     return result
 
-def check_email(email:str)->bool:
+
+def check_email(email: str) -> bool:
     i_1 = i_2 = 0
     for i, char in enumerate(email):
-        if email[i] == '@':
+        if email[i] == "@":
             i_1 = i
-        if email[i] == '.':
+        if email[i] == ".":
             i_2 = i
         else:
             continue
-    if i_1 < i_2 and i_1 >0 and i_2-i_1 > 1 and email[-1] !=".":
+    if i_1 < i_2 and i_1 > 0 and i_2 - i_1 > 1 and email[-1] != ".":
         return True
     else:
         return False
+
 
 def check_email_1(email):
     if not email:
         return False
 
-    if '@' not in email or '.' not in email:
+    if "@" not in email or "." not in email:
         return False
 
-    at_index = email.find('@')
-    dot_index = email.find('.', at_index)
+    at_index = email.find("@")
+    dot_index = email.find(".", at_index)
 
     # Проверяем, что '@' не первый символ, '.' не первый символ после '@', и '.' не последний символ
     if at_index < 1 or dot_index < at_index + 2 or dot_index == len(email) - 1:
         return False
 
     # Добавляем проверку на недопустимые символы в доменной части
-    domain = email[at_index+1:dot_index]
+    domain = email[at_index + 1 : dot_index]
     if not re.match(r"^[a-zA-Z0-9-]+$", domain):
         return False
 
     return True
-    '''
+    """
     re.match(): Эта функция проверяет, соответствует ли начало строки заданному регулярному выражению. 
     В данном случае, она проверяет, соответствует ли вся строка в переменной domain заданному шаблону.
     r"^[a-zA-Z0-9-]+$": Это само регулярное выражение:
@@ -59,39 +61,43 @@ def check_email_1(email):
     -: дефис (тире).
     +: Указывает, что один или более из перечисленных символов должны присутствовать. То есть, доменная часть должна содержать хотя бы один символ из указанного набора.
     $: Указывает на конец строки. Это значит, что после разрешённых символов больше ничего в строке быть не должно.
-    '''
+    """
+
 
 # 1. В этом модуле - обычные данные, Фикстура - в test
 def lst_of_numbers() -> list[int]:
     return [1, 2, 3, 1]
 
-def count_number_in_list(lst_of_numbers, val_find)->int:
+
+def count_number_in_list(lst_of_numbers, val_find) -> int:
     return list(lst_of_numbers).count(val_find)
 
-def calculate_area(shape:str, sides:list[int|float]) -> float:
-    '''
-    Функция принимает на вход название геометрической фигуры в виде строки 
+
+def calculate_area(shape: str, sides: list[int | float]) -> float:
+    """
+    Функция принимает на вход название геометрической фигуры в виде строки
     и список ее сторон (в случае окружности список содержит радиус), а затем возвращает ее площадь.
     Функция поддерживает фигуры: квадрат, прямоугольник, треугольник, круг
-    '''
-    if shape == 'square':
-        a = sides [0]
-        return a**2
-    elif shape == 'rectangle':
-        a, b = sides [0], sides [1]
-        return a*b
-    elif shape == 'circle':
+    """
+    if shape == "square":
         a = sides[0]
-        return math.pi * a ** 2
-    elif shape == 'triangle':
-        a, b, c = sides [0], sides [1], sides [2]
+        return a**2
+    elif shape == "rectangle":
+        a, b = sides[0], sides[1]
+        return a * b
+    elif shape == "circle":
+        a = sides[0]
+        return math.pi * a**2
+    elif shape == "triangle":
+        a, b, c = sides[0], sides[1], sides[2]
         p = (a + b + c) / 2
-        s = (p * (p - a) * (p - b) * (p - c))**0.5
+        s = (p * (p - a) * (p - b) * (p - c)) ** 0.5
         return s
     else:
         return None
 
-def my_slice(coll:str, start:int=0, end:int=None)-> str|list:
+
+def my_slice(coll: str, start: int = 0, end: int = None) -> str | list:
     """
     Возвращает новый массив, содержащий копию части исходного массива.
     :coll: исходный список.
@@ -123,6 +129,7 @@ def merge_dicts(dict1, dict2):
     merged.update(dict2)  # Обновляем его значениями из второго словаря
     return merged
 
+
 def binary_search(arr, target):
     left, right = 0, len(arr) - 1
 
@@ -139,13 +146,13 @@ def binary_search(arr, target):
 
 
 def binary_search_1(arr, target):
-  try:
-    return arr.index(target)
-  except:
-    return -1
+    try:
+        return arr.index(target)
+    except:
+        return -1
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # print(sum_divisible_by_3_or_5([1,2,3]))
     # print(check_email('emai.l@mail.@rt'))# email@mail.ru
     # print(check_email_1('email@mail.'))
@@ -166,5 +173,5 @@ if __name__ == '__main__':
     # print(my_slice('океанариум', 3)) # анариум
     # print(my_slice('океанариум', -1, 3)) # пусто
     #
-    print (binary_search([1, 2, 3, 4, 5], 5))
+    print(binary_search([1, 2, 3, 4, 5], 5))
     print(binary_search_1([1, 2, 3, 4, 5], 5))

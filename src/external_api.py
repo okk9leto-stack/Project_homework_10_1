@@ -105,10 +105,10 @@ def currency_conversion(transaction: Dict) -> Dict | Tuple[int, Dict]:
 #         "operationAmount": {"amount": "100.00", "currency": {"name": "USD", "code": "USD"}},
 #     }
 #     print(currency_conversion(transaction))
-    #
-    # { "base": "USD",
-    #   "date": "2026-05-01",
-    #   "historical": true,
-    #   "rates": {"RUB": 74.972586},
-    #   "success": true,
-    #   "timestamp": 1777679999}
+#
+# { "base": "USD",
+#   "date": "2026-05-01",
+#   "historical": true,
+#   "rates": {"RUB": 74.972586},
+#   "success": true,
+#   "timestamp": 1777679999}

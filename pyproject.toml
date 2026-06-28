@@ -1,25 +1,43 @@
-[project]
-name = "project-homework-10-1"
-version = "0.1.0"
-description = ""
-authors = [
-    {name = "Oksana Kuznetsova",email = "okk.9.leto@gmail.com"}
-]
-requires-python = ">=3.13"
-dependencies = [
-    "requests (>=2.33.1,<3.0.0)",
-    "python-dotenv (>=1.2.2,<2.0.0)",
-    "pytest (>=9.0.3,<10.0.0)",
-    "more-itertools (>=11.0.2,<12.0.0)"
-]
-
 [tool.poetry]
+name = "project-homework"
+version = "0.1.0"
+description = "My project"
+authors = ["Oksana Kuznetsova <okk.9.leto@gmail.com>"]
 package-mode = false
 
+[tool.poetry.dependencies]
+python = ">=3.13"
+requests = ">=2.33.1"
+python-dotenv = ">=1.2.2"
+pytest = ">=9.0.3"
+more-itertools = ">=11.0.2"
+
 [build-system]
-requires = ["poetry-core>=2.0.0,<3.0.0"]
+requires = ["poetry-core>=2.0.0"]
 build-backend = "poetry.core.masonry.api"
 
+#[project]
+#name = "project-homework-10-1"
+#version = "0.1.0"
+#description = ""
+#authors = [
+#    {name = "Oksana Kuznetsova",email = "okk.9.leto@gmail.com"}
+#]
+#requires-python = ">=3.13"
+#dependencies = [
+#    "requests (>=2.33.1,<3.0.0)",
+#    "python-dotenv (>=1.2.2,<2.0.0)",
+#    "pytest (>=9.0.3,<10.0.0)",
+#    "more-itertools (>=11.0.2,<12.0.0)"
+#]
+#
+#[tool.poetry]
+#package-mode = true
+#
+#[build-system]
+#requires = ["poetry-core>=2.0.0,<3.0.0"]
+#build-backend = "poetry.core.masonry.api"
+#
 [dependency-groups]
 lint = [
     "flake8 (>=7.3.0,<8.0.0)",
@@ -71,3 +89,4 @@ exclude = '''
 # максимальная длина строки
 line_length = 119
 force_single_line = true
+

@@ -1,5 +1,9 @@
 import pytest
-from src.processing import filter_by_state, sort_by_date
+
+from src.processing import filter_by_state
+from src.processing import sort_by_date
+
+
 # @pytest.fixture()
 # def dict_state() -> list[dict]:
 #     # для def filter_by_state(dict_state: List[Dict], state: str = "EXECUTED") -> List[Dict]^ in processing.py
