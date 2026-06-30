@@ -1,3 +1,13 @@
+import logging
+
+logger = logging.getLogger("masks")
+logger.setLevel(logging.DEBUG)
+file_handler = logging.FileHandler("../logs/masks.log", mode="w", encoding="utf-8")
+file_formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+file_handler.setFormatter(file_formatter)
+logger.addHandler(file_handler)
+
+
 def get_mask_card_number(number: str) -> str:
     """Функция get_mask_card_number принимает на вход номер карты и возвращает ее маску.
     Номер карты замаскирован и отображается в формате XXXX XX** **** XXXX , где X  — это цифра номера.
@@ -9,13 +19,17 @@ def get_mask_card_number(number: str) -> str:
     number = number.replace(" ", "")
 
     if number == "":
+        logger.info("Ошибка ввода номера карты (номер не введен)")
         return "Ошибка: Вы не ввели номер карты"
     if not number.isdigit():
+        logger.info("Ошибка ввода номера карты (номер карты должен состоять только из цифр)")
         return "Ошибка: номер карты должен состоять только из цифр"
     if len(number) != 16:
+        logger.info("Ошибка ввода номера карты (неверная длина номера)")
         return "Ошибка: неверная длина номера"
 
     mask = f"{number[:4]} {number[4:6]}** **** {number[-4:]}"
+    logger.info(f"Создана маска для карты: {mask}")
     return mask
 
 
@@ -28,13 +42,17 @@ def get_mask_account(number: str) -> str:
     number = number.replace(" ", "")
 
     if number == "":
+        logger.error("Ошибка (не введен номер счета)")
         raise ValueError("Ошибка: Вы не ввели номер счета")
     if not number.isdigit():
+        logger.error("Ошибка (номер счета содержит не цифры)")
         raise ValueError("Ошибка: номер счета должен состоять только из цифр")
     if len(number) != 20:
+        logger.error("Ошибка (неверная длина номера)")
         raise ValueError("Ошибка: неверная длина номера")
 
     mask_account = f"**{number[-4:]}"
+    logger.info(f"Создана маска для счета: {mask_account}")
     return mask_account
 
 
