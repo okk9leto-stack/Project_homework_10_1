@@ -1,5 +1,5 @@
  Функция my_function
  Результат: error TypeError (unsupported operand type(s) for +: 'int' and 'str')
- Старт: Thu Jun 25 00:35:25 2026
+ Старт: Thu Sep  3 22:57:45 2026
  Аргументы (10, '20'), {} 
  -------------------------------------------------- end 
