@@ -1,10 +1,10 @@
 import pytest
-
+from typing import Dict, Any, Iterator
 from src.practic_12_1 import generate_users
 
 
 @pytest.fixture
-def data():
+def data()->dict[str, list]:
     return {
         "first_names": ["John", "Jane", "Mark", "Emily", "Michael", "Sarah"],
         "last_names": ["Doe", "Smith", "Johnson", "Brown", "Lee", "Wilson"],
