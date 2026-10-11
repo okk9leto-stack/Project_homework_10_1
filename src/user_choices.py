@@ -61,26 +61,62 @@ def get_user_choices_currency () -> str:
             return 'ALL'
         print('Выберите ответ "Да" или "Нет"')
 
-#
-#     choices["filter_by_text"] = (
-#         input("Фильтровать по слову в описании? Да/Нет: ")
-#         .strip().lower() == "да"
-#     )
-#
-#     if choices["filter_by_text"]:
-#         choices["search_text"] = input(
-#             "Введите текст для поиска: "
-#         ).strip()
-#     else:
-#         choices["search_text"] = ""
-#
-#     return choices
-# ```
+
+def get_user_choices_text() -> str:
+    """Собирает настройки обработки транзакций: возвращает необходимость поиска по тексту и текст для фильтрации."""
+    while True:
+        choices_text = (input("Фильтровать по слову в описании? Да/Нет: ")
+                                .strip().lower())  # удалит пробелы из фактического ответа "Да/Нет" + переведет в нижний регистр
+
+        if choices_text in ['да', 'нет']:
+            if choices_text == "да":
+                while True:
+                    choices_text = input("Введите текст для поиска: _____ ").strip().lower()
+                    if choices_text:
+                        print(f'Фильтровать по : "{choices_text}"')
+                        return choices_text
+                    print('Текст для фильтра не выбран')
+                    return None
+
+            print('Поиск по тексту не требуется')
+            return None
+
+        print('Выберите ответ "Да" или "Нет"')
+
+
+def get_user_choices_type_file() -> str:
+    file_types = [
+        {'number': 1, 'name': 'JSON', 'path': 'data/operations.json'},
+        {'number': 2, 'name': 'CSV', 'path': 'data/transactions_csv.csv'},
+        {'number': 3, 'name': 'XLSX', 'path': 'data/transactions_excel.xlsx'}
+    ]
+
+    print('Привет! Добро пожаловать в программу работы с банковскими транзакциями.')
+    print('Выберите необходимый пункт меню:')
+
+    for dict in file_types:
+        print(f'{dict['number']}. Получить информацию о транзакциях из {dict['name']}-файла')
+    numbers_types = [dict['number'] for dict in file_types]
+
+    while True:
+        try:
+            choice_num = int(input(f'Выбери один из вариантов {numbers_types}: '))  # Пользователь: 1
+
+            if choice_num in numbers_types:
+                print(f'Для обработки выбран {file_types[choice_num - 1]['name']}-файл')
+                return file_types[choice_num-1]['path']
+            else:  # Пользователь: 4
+                print(f'Выбери один из предложенных вариантов: {numbers_types}.')
+
+        except ValueError:
+            print(f'Нужно ввести число: {numbers_types}.')
 
 if __name__ == '__main__':
-    print(get_user_choices_status())
-    print(get_user_choices_sortdays())
-    print(get_user_choices_currency())
+    # print(get_user_choices_status())
+    # print(get_user_choices_sortdays())
+    # print(get_user_choices_currency())
+    # print(get_user_choices_text())
+    print(get_user_choices_type_file())
 
     # transactions_list = get_user_choices_transactions_list()
     # print(transactions_list)
