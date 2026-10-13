@@ -5,7 +5,8 @@ def get_user_choices_status () -> str:
     status_list = ['EXECUTED', 'CANCELED', 'PENDING']
 
     print('Введите статус, по которому необходимо выполнить фильтрацию.')
-    print(f'Доступные для фильтровки статусы: {', '.join(status_list)}')
+    statuses = ', '.join(status_list)
+    print(f'Доступные для фильтровки статусы: {statuses}')
 
     while True:
         choice_status = input('Выбери статус: ')  # Пользователь: "EXECUTED"
@@ -56,8 +57,8 @@ def get_user_currency_choice() -> str:
 
     print(
         'Выводить только рублёвые транзакции?\n'
-        'Да — только рубли (RUB).\n'
-        'Нет — все валюты (ALL).'
+        'Да = только рубли (RUB).\n'
+        'Нет = все валюты (ALL).'
     )
 
     while True:
@@ -128,12 +129,24 @@ def get_user_choices_type_file() -> str:
         except ValueError:
             print(f'Нужно ввести число: {available_choices}.')
 
+def get_user_choices_all() -> dict:
+    """Собирает все настройки обработки транзакций."""
+    return {
+        'file_path': get_user_choices_type_file(),
+        'status': get_user_choices_status(),
+        'sort_order': get_user_choices_sortdays(),
+        'text': get_user_choices_text(),
+        'currency': get_user_currency_choice()
+    }
+
 # if __name__ == '__main__':
+    # print(get_user_choices_type_file())
     # print(get_user_choices_status())
     # print(get_user_choices_sortdays())
-    # print(get_user_choices_currency())
+    # print(get_user_choices_text())
     # print(get_user_currency_choice())
-    # print(get_user_choices_type_file())
+
+    # print(get_user_choices_all())
 
     # transactions_list = get_user_choices_transactions_list()
     # print(transactions_list)
