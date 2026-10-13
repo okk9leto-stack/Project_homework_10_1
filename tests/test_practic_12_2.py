@@ -55,16 +55,16 @@ def lst_of_numberss() -> list[int]:
 
 
 @pytest.fixture
-def empty_list():
+def empty_list() -> list:
     return []
 
 
 @pytest.fixture
-def list_with_one_element():
+def list_with_one_element() -> list:
     return [7]
 
 
-def test_count_numbers_in_list(lst_of_numberss, empty_list, list_with_one_element) -> None:
+def test_count_numbers_in_list(lst_of_numberss:list[int], empty_list:list, list_with_one_element:list) -> None:
     assert count_number_in_list(lst_of_numberss, 4) == 7
     assert count_number_in_list(lst_of_numberss, 1) == 2
     assert count_number_in_list(lst_of_numberss, 41) == 0
@@ -83,7 +83,7 @@ def test_count_numbers_in_list(lst_of_numberss, empty_list, list_with_one_elemen
         ("unknown", [1, 2, 3], None),
     ],
 )
-def test_calculate_area(shape, sides, expected):
+def test_calculate_area(shape, sides, expected)-> None:
     assert calculate_area(shape, sides) == pytest.approx(expected)  # Решение через pytest.approx()
     """# Этот инструмент сравнивает числа с определенным допуском (tolerance). 
     По умолчанию это 10^{-6}. «Если разница между числами ничтожна, считай, что они равны».
@@ -104,7 +104,7 @@ def test_calculate_area(shape, sides, expected):
         ("океанариум", -1, 3, ""),  # пусто
     ],
 )
-def test_my_slice(coll, start, end, expected):
+def test_my_slice(coll, start, end, expected)-> None:
     assert my_slice(coll, start, end) == expected
 
 
@@ -118,34 +118,34 @@ def test_my_slice(coll, start, end, expected):
         ({}, {}, {}),
     ],
 )
-def test_merge_dicts(dict1, dict2, expected):
+def test_merge_dicts(dict1, dict2, expected)-> None:
     assert merge_dicts(dict1, dict2) == expected
 
 
 # Альтернативное решение
 # Фикстуры для создания различных наборов словарей
 @pytest.fixture
-def dict1_no_overlap():
+def dict1_no_overlap()-> dict:
     return {"a": 1, "b": 2}
 
 
 @pytest.fixture
-def dict2_no_overlap():
+def dict2_no_overlap()-> dict:
     return {"c": 3, "d": 4}
 
 
 @pytest.fixture
-def dict1_with_overlap():
+def dict1_with_overlap()-> dict:
     return {"a": 1, "b": 2}
 
 
 @pytest.fixture
-def dict2_with_overlap():
+def dict2_with_overlap()-> dict:
     return {"b": 3, "c": 4}
 
 
 @pytest.fixture
-def empty_dict():
+def empty_dict()-> dict:
     return {}
 
 
@@ -161,7 +161,7 @@ def empty_dict():
         ("empty_dict", "empty_dict", {}),
     ],
 )
-def test_merge_dicts(dict1_fixture, dict2_fixture, expected, request):  # использовать с request
+def test_merge_dicts(dict1_fixture, dict2_fixture, expected, request)-> None:  # использовать с request
     dict1 = request.getfixturevalue(dict1_fixture)  # использовать request.getfixturevalue
     dict2 = request.getfixturevalue(dict2_fixture)
     assert merge_dicts(dict1, dict2) == expected
@@ -183,7 +183,7 @@ def test_merge_dicts(dict1_fixture, dict2_fixture, expected, request):  # исп
         ([1], 2, -1),  # Список с одним элементом, элемент не найден
     ],
 )
-def test_binary_search(arr, target, expected):
+def test_binary_search(arr, target, expected)-> None:
     assert binary_search(arr, target) == expected
 
 
