@@ -14,109 +14,126 @@ def get_user_choices_status () -> str:
         if status in status_list:
             print(f'Операции отфильтрованы по статусу {status}')
             return status
-            break
 
         print(f'Статус операции "{choice_status}" недоступен')  # Пользователь: "EEEEXECUTED"
         print('Введите статус, по которому необходимо выполнить фильтрацию.')
         print(f'Доступные для фильтрации статусы: {", ".join(status_list)}')
 
 
-def get_user_choices_sortdays() -> str:
-    """Собирает настройки обработки транзакций: возвращает необходимость СОРТИРОВКИ по дате и порядок сортировки."""
+def get_user_choices_sortdays() -> bool | None:
+    """Собирает настройки обработки транзакций: возвращает необходимость СОРТИРОВКИ по дате и порядок сортировки:
+    True — по убыванию,
+    False — по возрастанию,
+    None — сортировка не требуется."""
+
     while True:
         choices_sort_by_date = (input("Отсортировать операции по дате? Да/Нет: ")
                                 .strip().lower())  # удалит пробелы из фактического ответа "Да/Нет" + переведет в нижний регистр
 
-        if choices_sort_by_date in ['да', 'нет']:
-            if choices_sort_by_date == "да":
-                while True:
-                    choices_sort_order = input("Сортировать по возрастанию или по убыванию? "
-                                               ).strip().lower()
-                    if choices_sort_order in ["по возрастанию", "по убыванию", ]:
-                        print(f'Ваш выбор: "{choices_sort_by_date}",  сортировка "{choices_sort_order}"')
-                        if choices_sort_order == "по убыванию":
-                            return True
-                        return False
+        if choices_sort_by_date == "да":
+            while True:
+                choices_sort_order = input("Сортировать по возрастанию или по убыванию? "
+                                           ).strip().lower()
+                if choices_sort_order in ["по возрастанию", "по убыванию", ]:
+                    print(f'Ваш выбор: "{choices_sort_by_date}",  сортировка "{choices_sort_order}"')
+                    if choices_sort_order == "по убыванию":
+                        return True  # Сортировка по убыванию
+                    return False  # Сортировка по возрастанию
 
-                    print('Введите "по возрастанию" или "по убыванию"')
+                print('Введите "по возрастанию" или "по убыванию"')
 
-                return choices_sort_order
-
-            choices_sort_order = None
-            return choices_sort_order
-
-        print('Выберите ответ "Да" или "Нет"')
-
-
-def get_user_choices_currency () -> str:
-    """Собирает настройки обработки транзакций: возвращает выбор валюты для фильтрации ("ALL"/"RUB")."""
-
-    print('Выводить только рублевые транзакции? Да(только рублевые[RUB])/Нет(все валюты[ALL])')
-    while True:
-        choice_currency = ((input('Выводить только рублевые транзакции? Да/Нет: '))
-                           .strip().lower())
-        if choice_currency =='да':
-            return 'RUB'
-        elif choice_currency =='нет':
-            return 'ALL'
-        print('Выберите ответ "Да" или "Нет"')
-
-
-def get_user_choices_text() -> str:
-    """Собирает настройки обработки транзакций: возвращает необходимость поиска по тексту и текст для фильтрации."""
-    while True:
-        choices_text = (input("Фильтровать по слову в описании? Да/Нет: ")
-                                .strip().lower())  # удалит пробелы из фактического ответа "Да/Нет" + переведет в нижний регистр
-
-        if choices_text in ['да', 'нет']:
-            if choices_text == "да":
-                while True:
-                    choices_text = input("Введите текст для поиска: _____ ").strip().lower()
-                    if choices_text:
-                        print(f'Фильтровать по : "{choices_text}"')
-                        return choices_text
-                    print('Текст для фильтра не выбран')
-                    return None
-
-            print('Поиск по тексту не требуется')
+        elif choices_sort_by_date == 'нет':
+            print('Сортировка по дате не требуется.')
             return None
 
-        print('Выберите ответ "Да" или "Нет"')
+        else:
+            print('Выберите ответ "Да" или "Нет"')
+
+
+def get_user_currency_choice() -> str:
+    """Собирает настройки обработки транзакций:
+    Возвращает выбор валюты для фильтрации: 'RUB' или 'ALL'."""
+
+    print(
+        'Выводить только рублёвые транзакции?\n'
+        'Да — только рубли (RUB).\n'
+        'Нет — все валюты (ALL).'
+    )
+
+    while True:
+        choice_currency = input('Ваш ответ (Да/Нет): ').strip().lower()
+
+        if choice_currency == 'да':
+            return 'RUB'
+
+        elif choice_currency == 'нет':
+            return 'ALL'
+
+        print('Выберите ответ "Да" или "Нет".')
+
+
+def get_user_choices_text() -> str|None:
+    """Собирает настройки обработки транзакций:
+    Запрашивает необходимость поиска по тексту
+    и возвращает текст для фильтрации или None"""
+
+    while True:
+        survey_text = (input("Фильтровать по слову в описании? Да/Нет: ")
+                                .strip().lower())  # удалит пробелы из фактического ответа "Да/Нет" + переведет в нижний регистр
+
+        if survey_text == "да":
+            while True:
+                choices_text = input("Введите текст для поиска: _____ ").strip().lower()
+                if choices_text:
+                    print(f'Фильтровать по : "{choices_text}"')
+                    return choices_text
+                print('Текст для фильтра не выбран. Попробуйте снова.')
+                # return None
+        elif survey_text == "нет":
+            print(f'Поиск по тексту не требуется')
+            return None
+
+        else:
+            print('Выберите ответ "Да" или "Нет"')
 
 
 def get_user_choices_type_file() -> str:
-    file_types = [
-        {'number': 1, 'name': 'JSON', 'path': 'data/operations.json'},
-        {'number': 2, 'name': 'CSV', 'path': 'data/transactions_csv.csv'},
-        {'number': 3, 'name': 'XLSX', 'path': 'data/transactions_excel.xlsx'}
-    ]
+    """Собирает настройки обработки транзакций:
+        Запрашивает тип файла и возвращает путь, по которому он расположен"""
+    file_types = {
+        1:{'name': 'JSON', 'path': 'data/operations.json'},
+        2:{'name': 'CSV', 'path': 'data/transactions_csv.csv'},
+        3:{'name': 'XLSX', 'path': 'data/transactions_excel.xlsx'}
+    }
 
     print('Привет! Добро пожаловать в программу работы с банковскими транзакциями.')
     print('Выберите необходимый пункт меню:')
 
-    for dict in file_types:
-        print(f'{dict['number']}. Получить информацию о транзакциях из {dict['name']}-файла')
-    numbers_types = [dict['number'] for dict in file_types]
+    for num, info in file_types.items():
+        print(f'{num}. Получить информацию о транзакциях из {info["name"]}-файла')
+
+    available_choices=list(file_types.keys())
 
     while True:
         try:
-            choice_num = int(input(f'Выбери один из вариантов {numbers_types}: '))  # Пользователь: 1
+            choice_num = int(input(f'Выбери один из вариантов {available_choices}: ').strip())  # Пользователь: 1
 
-            if choice_num in numbers_types:
-                print(f'Для обработки выбран {file_types[choice_num - 1]['name']}-файл')
-                return file_types[choice_num-1]['path']
-            else:  # Пользователь: 4
-                print(f'Выбери один из предложенных вариантов: {numbers_types}.')
+            if choice_num in available_choices:
+                file_info = file_types[choice_num]
+                print(f"Для обработки выбран {file_info['name']}-файл")
+                return file_info['path']
+
+            print(f'Выбери один из предложенных вариантов: {available_choices}.') # Пользователь: 4
 
         except ValueError:
-            print(f'Нужно ввести число: {numbers_types}.')
+            print(f'Нужно ввести число: {available_choices}.')
 
-if __name__ == '__main__':
+# if __name__ == '__main__':
     # print(get_user_choices_status())
     # print(get_user_choices_sortdays())
     # print(get_user_choices_currency())
-    # print(get_user_choices_text())
-    print(get_user_choices_type_file())
+    # print(get_user_currency_choice())
+    # print(get_user_choices_type_file())
 
     # transactions_list = get_user_choices_transactions_list()
     # print(transactions_list)
