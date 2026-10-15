@@ -1,8 +1,7 @@
 import json
 import logging
-from typing import List
-from typing import Optional
 from pathlib import Path
+from typing import List
 
 logger = logging.getLogger("utils")
 logger.setLevel(logging.DEBUG)
@@ -14,11 +13,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 LOG_DIR = BASE_DIR / "logs"
 LOG_DIR.mkdir(parents=True, exist_ok=True)
 
-file_handler = logging.FileHandler(
-    LOG_DIR / "utils.log",
-    mode="w",
-    encoding="utf-8"
-)
+file_handler = logging.FileHandler(LOG_DIR / "utils.log", mode="w", encoding="utf-8")
 
 # file_handler = logging.FileHandler("../logs/utils.log", mode="w", encoding="utf-8")
 file_formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
@@ -35,7 +30,7 @@ logger.addHandler(file_handler)
 # Если JSON-файл пустой, содержит не-список или не найден, возвращается пустой список.
 
 
-def operations_read(path: str = None) -> List[dict]:
+def operations_read(path: str | None = None) -> List[dict]:
     """
     Функция принимает на вход путь до JSON-файла и возвращает список словарей
     с данными о финансовых транзакциях, в случае ошибки возвращает пустой список
@@ -61,14 +56,14 @@ def operations_read(path: str = None) -> List[dict]:
     except (json.JSONDecodeError, FileNotFoundError) as e:
         logger.error(f"Произошла ошибка: {e}")
         return []
-
-
-if __name__ == "__main__":
-    results = operations_read("../data/operations.json")  # "../data/operations.json")
-    print(results[0])
-    # results[0] == {'id': 441945886, 'state': 'EXECUTED', 'date': '2019-08-26T10:50:58.294041',
-    # 'operationAmount': {'amount': '31957.58', 'currency': {'name': 'руб.', 'code': 'RUB'}},
-    # 'description': 'Перевод организации', 'from': 'Maestro 1596837868705199', 'to': 'Счет 64686473678894779589'}
-
-    for result in results:
-        print(result)
+#
+#
+# if __name__ == "__main__":
+#     results = operations_read("../data/operations.json")  # "../data/operations.json")
+#     print(results[0])
+#     # results[0] == {'id': 441945886, 'state': 'EXECUTED', 'date': '2019-08-26T10:50:58.294041',
+#     # 'operationAmount': {'amount': '31957.58', 'currency': {'name': 'руб.', 'code': 'RUB'}},
+#     # 'description': 'Перевод организации', 'from': 'Maestro 1596837868705199', 'to': 'Счет 64686473678894779589'}
+#
+#     for result in results:
+#         print(result)

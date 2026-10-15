@@ -1,9 +1,7 @@
 from unittest.mock import MagicMock
 from unittest.mock import patch
-from pathlib import Path
-from src.utils import operations_read
-import pytest
 
+from src.utils import operations_read
 
 # Тестирование
 # Написаны тесты к новым функциональностям проекта.
@@ -64,17 +62,6 @@ def test_operations_read_is_dict_mock(mock_json_load: MagicMock) -> None:
 
 def test_operations_read_ok() -> None:
     assert (operations_read("data/operations.json")[0]) == {
-        "id": 441945886,
-        "state": "EXECUTED",
-        "date": "2019-08-26T10:50:58.294041",
-        "operationAmount": {"amount": "31957.58", "currency": {"name": "руб.", "code": "RUB"}},
-        "description": "Перевод организации",
-        "from": "Maestro 1596837868705199",
-        "to": "Счет 64686473678894779589",
-    }
-
-def test_operations_read_ok() -> None:
-    assert (operations_read("./data/operations.json")[0]) == {
         "id": 441945886,
         "state": "EXECUTED",
         "date": "2019-08-26T10:50:58.294041",

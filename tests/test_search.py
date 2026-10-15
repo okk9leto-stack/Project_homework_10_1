@@ -1,9 +1,8 @@
 import pytest
 
-from src.search import process_bank_search
-from src.search import process_bank_operations
 from src.search import filter_by_currency
-
+from src.search import process_bank_operations
+from src.search import process_bank_search
 
 
 def test_process_bank_search_finds_operations_by_description() -> None:
@@ -51,6 +50,7 @@ def test_process_bank_search_returns_empty_list_for_empty_data() -> None:
 
 
 # from src.search import process_bank_operations
+
 
 def test_process_bank_operations() -> None:
     data = [
@@ -109,34 +109,17 @@ def test_process_bank_operations_empty_categories() -> None:
 
 # from src.search import filter_by_currency
 
+
 @pytest.fixture
-def transactions() ->list[dict]:
+def transactions() -> list[dict]:
     return [
-        {
-            "id": 1,
-            "operationAmount": {
-                "amount": "1000.00",
-                "currency": {"code": "USD", "name": "Доллар США"}
-            }
-        },
-        {
-            "id": 2,
-            "operationAmount": {
-                "amount": "2000.00",
-                "currency": {"code": "EUR", "name": "Евро"}
-            }
-        },
-        {
-            "id": 3,
-            "operationAmount": {
-                "amount": "500.00",
-                "currency": {"code": "USD", "name": "Доллар США"}
-            }
-        },
+        {"id": 1, "operationAmount": {"amount": "1000.00", "currency": {"code": "USD", "name": "Доллар США"}}},
+        {"id": 2, "operationAmount": {"amount": "2000.00", "currency": {"code": "EUR", "name": "Евро"}}},
+        {"id": 3, "operationAmount": {"amount": "500.00", "currency": {"code": "USD", "name": "Доллар США"}}},
     ]
 
 
-def test_filter_by_currency_usd(transactions:list[dict])-> None:
+def test_filter_by_currency_usd(transactions: list[dict]) -> None:
     """Проверяем фильтрацию транзакций по USD."""
     result = filter_by_currency(transactions, "USD")
 
@@ -151,22 +134,21 @@ def test_filter_by_currency_eur(transactions: list[dict]) -> None:
     assert result[0]["id"] == 2
 
 
-def test_filter_by_currency_all(transactions: list[dict])-> None:
+def test_filter_by_currency_all(transactions: list[dict]) -> None:
     """Проверяем возврат всех транзакций по умолчанию."""
     result = filter_by_currency(transactions)
 
     assert result == transactions
 
 
-def test_filter_by_currency_no_matches(transactions: list[dict])-> None:
+def test_filter_by_currency_no_matches(transactions: list[dict]) -> None:
     """Проверяем валюту, которой нет в списке."""
     result = filter_by_currency(transactions, "GBP")
 
     assert result == []
 
 
-def test_filter_by_currency_empty_list()-> None:
+def test_filter_by_currency_empty_list() -> None:
     """Проверяем работу с пустым списком транзакций."""
     assert filter_by_currency([], "USD") == []
     assert filter_by_currency([]) == []
-
