@@ -1,9 +1,9 @@
 import pytest
 
+from src.search import filter_by_currency_csv_xlsx
 from src.search import filter_by_currency_json
 from src.search import process_bank_operations
 from src.search import process_bank_search
-from src.search import filter_by_currency_csv_xlsx
 
 
 def test_process_bank_search_finds_operations_by_description() -> None:
@@ -155,7 +155,6 @@ def test_filter_by_currency_json_empty_list() -> None:
     assert filter_by_currency_json([]) == []
 
 
-
 @pytest.fixture
 def transactions_csv_xlsx() -> list[dict]:
     return [
@@ -169,9 +168,7 @@ def transactions_csv_xlsx() -> list[dict]:
 def test_filter_by_currency_csv_xlsx_usd(
     transactions_csv_xlsx: list[dict],
 ) -> None:
-    result = filter_by_currency_csv_xlsx(
-        transactions_csv_xlsx, "USD"
-    )
+    result = filter_by_currency_csv_xlsx(transactions_csv_xlsx, "USD")
 
     assert len(result) == 2
     assert [item["id"] for item in result] == [1, 3]
@@ -180,9 +177,7 @@ def test_filter_by_currency_csv_xlsx_usd(
 def test_filter_by_currency_csv_xlsx_eur(
     transactions_csv_xlsx: list[dict],
 ) -> None:
-    result = filter_by_currency_csv_xlsx(
-        transactions_csv_xlsx, "EUR"
-    )
+    result = filter_by_currency_csv_xlsx(transactions_csv_xlsx, "EUR")
 
     assert len(result) == 1
     assert result[0]["id"] == 2
@@ -191,9 +186,7 @@ def test_filter_by_currency_csv_xlsx_eur(
 def test_filter_by_currency_csv_xlsx_rub(
     transactions_csv_xlsx: list[dict],
 ) -> None:
-    result = filter_by_currency_csv_xlsx(
-        transactions_csv_xlsx, "RUB"
-    )
+    result = filter_by_currency_csv_xlsx(transactions_csv_xlsx, "RUB")
 
     assert len(result) == 1
     assert result[0]["id"] == 4
@@ -202,9 +195,7 @@ def test_filter_by_currency_csv_xlsx_rub(
 def test_filter_by_currency_csv_xlsx_all(
     transactions_csv_xlsx: list[dict],
 ) -> None:
-    result = filter_by_currency_csv_xlsx(
-        transactions_csv_xlsx, "ALL"
-    )
+    result = filter_by_currency_csv_xlsx(transactions_csv_xlsx, "ALL")
 
     assert result == transactions_csv_xlsx
 
@@ -220,9 +211,7 @@ def test_filter_by_currency_csv_xlsx_default_currency(
 def test_filter_by_currency_csv_xlsx_no_matches(
     transactions_csv_xlsx: list[dict],
 ) -> None:
-    result = filter_by_currency_csv_xlsx(
-        transactions_csv_xlsx, "GBP"
-    )
+    result = filter_by_currency_csv_xlsx(transactions_csv_xlsx, "GBP")
 
     assert result == []
 

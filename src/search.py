@@ -41,6 +41,7 @@ def filter_by_currency_json(transactions_list: list | dict, currency: str = "ALL
         if transaction["operationAmount"]["currency"]["code"] == currency
     ]
 
+
 def filter_by_currency_csv_xlsx(transactions_list: list | dict, currency: str = "ALL") -> list | dict:
     """
     Для _csv_xlsx. Функция принимает на вход список словарей с транзакциями и валюту,
@@ -50,14 +51,10 @@ def filter_by_currency_csv_xlsx(transactions_list: list | dict, currency: str = 
     if currency == "ALL":
         return transactions_list
 
-    return [
-        transaction
-        for transaction in transactions_list
-        if transaction["currency_code"] == currency
-    ]
+    return [transaction for transaction in transactions_list if transaction["currency_code"] == currency]
 
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
 #     transactions = [  # is_valid
 #         {
 #             "id": 939719570,
@@ -110,12 +107,14 @@ if __name__ == "__main__":
 #     for one_transaction in rub_transactions:
 #         print(one_transaction)
 
-    # search_transactions = process_bank_search(transactions, "Переводs")
-    # for one_transaction in search_transactions:
-    #     print(one_transaction)
-    #
-    # states_count = process_bank_operations(transactions, ["Переводы организации", "Перевод с карты на карту"])
-    # print(states_count)
-
-    transactions = [{'id': 650703.0, 'state': 'EXECUTED', 'date': '2023-09-05T11:30:32Z', 'amount': 16210.0, 'currency_name': 'Sol', 'currency_code': 'PEN', 'from': 'Счет 58803664561298323391', 'to': 'Счет 39745660563456619397', 'description': 'Перевод организации'}]
-    print(filter_by_currency_csv_xlsx(transactions, currency = "ALL"))
+# search_transactions = process_bank_search(transactions, "Переводs")
+# for one_transaction in search_transactions:
+#     print(one_transaction)
+#
+# states_count = process_bank_operations(transactions, ["Переводы организации", "Перевод с карты на карту"])
+# print(states_count)
+#
+# transactions = [{'id': 650703.0, 'state': 'EXECUTED', 'date': '2023-09-05T11:30:32Z', 'amount': 16210.0,
+# 'currency_name': 'Sol', 'currency_code': 'PEN', 'from': 'Счет 58803664561298323391',
+# 'to': 'Счет 39745660563456619397', 'description': 'Перевод организации'}]
+# print(filter_by_currency_csv_xlsx(transactions, currency = "ALL"))
