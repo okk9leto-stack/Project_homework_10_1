@@ -59,11 +59,14 @@ def operations_read(path: str | None = None) -> List[dict]:
 #
 #
 # if __name__ == "__main__":
-#     results = operations_read("../data/operations.json")  # "../data/operations.json")
-#     print(results[0])
+    # results = operations_read("../data/operations.json")  # "../data/operations.json")
+    # print(results[0])
 #     # results[0] == {'id': 441945886, 'state': 'EXECUTED', 'date': '2019-08-26T10:50:58.294041',
 #     # 'operationAmount': {'amount': '31957.58', 'currency': {'name': 'руб.', 'code': 'RUB'}},
 #     # 'description': 'Перевод организации', 'from': 'Maestro 1596837868705199', 'to': 'Счет 64686473678894779589'}
 #
 #     for result in results:
 #         print(result)
+#
+    # data = operations_read('../data/operations.json')
+    # print(data[0])

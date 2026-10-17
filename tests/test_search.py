@@ -1,8 +1,9 @@
 import pytest
 
-from src.search import filter_by_currency
+from src.search import filter_by_currency_json
 from src.search import process_bank_operations
 from src.search import process_bank_search
+from src.search import filter_by_currency_csv_xlsx
 
 
 def test_process_bank_search_finds_operations_by_description() -> None:
@@ -107,7 +108,7 @@ def test_process_bank_operations_empty_categories() -> None:
     assert result == {}
 
 
-# from src.search import filter_by_currency
+# from src.search import filter_by_currency_json
 
 
 @pytest.fixture
@@ -119,36 +120,114 @@ def transactions() -> list[dict]:
     ]
 
 
-def test_filter_by_currency_usd(transactions: list[dict]) -> None:
+def test_filter_by_currency_json_usd(transactions: list[dict]) -> None:
     """Проверяем фильтрацию транзакций по USD."""
-    result = filter_by_currency(transactions, "USD")
+    result = filter_by_currency_json(transactions, "USD")
 
     assert len(result) == 2
 
 
-def test_filter_by_currency_eur(transactions: list[dict]) -> None:
+def test_filter_by_currency_json_eur(transactions: list[dict]) -> None:
     """Проверяем фильтрацию транзакций по EUR."""
-    result = filter_by_currency(transactions, "EUR")
+    result = filter_by_currency_json(transactions, "EUR")
 
     assert len(result) == 1
     assert result[0]["id"] == 2
 
 
-def test_filter_by_currency_all(transactions: list[dict]) -> None:
+def test_filter_by_currency_json_all(transactions: list[dict]) -> None:
     """Проверяем возврат всех транзакций по умолчанию."""
-    result = filter_by_currency(transactions)
+    result = filter_by_currency_json(transactions)
 
     assert result == transactions
 
 
-def test_filter_by_currency_no_matches(transactions: list[dict]) -> None:
+def test_filter_by_currency_json_no_matches(transactions: list[dict]) -> None:
     """Проверяем валюту, которой нет в списке."""
-    result = filter_by_currency(transactions, "GBP")
+    result = filter_by_currency_json(transactions, "GBP")
 
     assert result == []
 
 
-def test_filter_by_currency_empty_list() -> None:
+def test_filter_by_currency_json_empty_list() -> None:
     """Проверяем работу с пустым списком транзакций."""
-    assert filter_by_currency([], "USD") == []
-    assert filter_by_currency([]) == []
+    assert filter_by_currency_json([], "USD") == []
+    assert filter_by_currency_json([]) == []
+
+
+
+@pytest.fixture
+def transactions_csv_xlsx() -> list[dict]:
+    return [
+        {"id": 1, "currency_code": "USD"},
+        {"id": 2, "currency_code": "EUR"},
+        {"id": 3, "currency_code": "USD"},
+        {"id": 4, "currency_code": "RUB"},
+    ]
+
+
+def test_filter_by_currency_csv_xlsx_usd(
+    transactions_csv_xlsx: list[dict],
+) -> None:
+    result = filter_by_currency_csv_xlsx(
+        transactions_csv_xlsx, "USD"
+    )
+
+    assert len(result) == 2
+    assert [item["id"] for item in result] == [1, 3]
+
+
+def test_filter_by_currency_csv_xlsx_eur(
+    transactions_csv_xlsx: list[dict],
+) -> None:
+    result = filter_by_currency_csv_xlsx(
+        transactions_csv_xlsx, "EUR"
+    )
+
+    assert len(result) == 1
+    assert result[0]["id"] == 2
+
+
+def test_filter_by_currency_csv_xlsx_rub(
+    transactions_csv_xlsx: list[dict],
+) -> None:
+    result = filter_by_currency_csv_xlsx(
+        transactions_csv_xlsx, "RUB"
+    )
+
+    assert len(result) == 1
+    assert result[0]["id"] == 4
+
+
+def test_filter_by_currency_csv_xlsx_all(
+    transactions_csv_xlsx: list[dict],
+) -> None:
+    result = filter_by_currency_csv_xlsx(
+        transactions_csv_xlsx, "ALL"
+    )
+
+    assert result == transactions_csv_xlsx
+
+
+def test_filter_by_currency_csv_xlsx_default_currency(
+    transactions_csv_xlsx: list[dict],
+) -> None:
+    result = filter_by_currency_csv_xlsx(transactions_csv_xlsx)
+
+    assert result == transactions_csv_xlsx
+
+
+def test_filter_by_currency_csv_xlsx_no_matches(
+    transactions_csv_xlsx: list[dict],
+) -> None:
+    result = filter_by_currency_csv_xlsx(
+        transactions_csv_xlsx, "GBP"
+    )
+
+    assert result == []
+
+
+def test_filter_by_currency_csv_xlsx_empty_list() -> None:
+    assert filter_by_currency_csv_xlsx([], "USD") == []
+    assert filter_by_currency_csv_xlsx([], "ALL") == []
+    assert filter_by_currency_csv_xlsx([]) == []

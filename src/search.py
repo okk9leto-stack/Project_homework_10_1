@@ -26,9 +26,9 @@ def process_bank_operations(data: list[dict], categories: list) -> dict:
     return result
 
 
-def filter_by_currency(transactions_list: list | dict, currency: str = "ALL") -> list | dict:
+def filter_by_currency_json(transactions_list: list | dict, currency: str = "ALL") -> list | dict:
     """
-    Функция принимает на вход список словарей с транзакциями и валюту,
+    Для _json. Функция принимает на вход список словарей с транзакциями и валюту,
     возвращает список словарей с транзакциями по выбранной валюте.
     Если валюта не выбрана, возвращает первоначальный список с транзакциями во всех валютах
     """
@@ -41,8 +41,23 @@ def filter_by_currency(transactions_list: list | dict, currency: str = "ALL") ->
         if transaction["operationAmount"]["currency"]["code"] == currency
     ]
 
-#
-# if __name__ == "__main__":
+def filter_by_currency_csv_xlsx(transactions_list: list | dict, currency: str = "ALL") -> list | dict:
+    """
+    Для _csv_xlsx. Функция принимает на вход список словарей с транзакциями и валюту,
+    возвращает список словарей с транзакциями по выбранной валюте.
+    Если валюта не выбрана, возвращает первоначальный список с транзакциями во всех валютах
+    """
+    if currency == "ALL":
+        return transactions_list
+
+    return [
+        transaction
+        for transaction in transactions_list
+        if transaction["currency_code"] == currency
+    ]
+
+
+if __name__ == "__main__":
 #     transactions = [  # is_valid
 #         {
 #             "id": 939719570,
@@ -91,13 +106,16 @@ def filter_by_currency(transactions_list: list | dict, currency: str = "ALL") ->
 #         },
 #     ]
 #
-#     rub_transactions = filter_by_currency(transactions, "RUB")
+#     rub_transactions = filter_by_currency_json(transactions, "RUB")
 #     for one_transaction in rub_transactions:
 #         print(one_transaction)
-#
-#     search_transactions = process_bank_search(transactions, "Переводs")
-#     for one_transaction in search_transactions:
-#         print(one_transaction)
-#
-#     states_count = process_bank_operations(transactions, ["Переводы организации", "Перевод с карты на карту"])
-#     print(states_count)
+
+    # search_transactions = process_bank_search(transactions, "Переводs")
+    # for one_transaction in search_transactions:
+    #     print(one_transaction)
+    #
+    # states_count = process_bank_operations(transactions, ["Переводы организации", "Перевод с карты на карту"])
+    # print(states_count)
+
+    transactions = [{'id': 650703.0, 'state': 'EXECUTED', 'date': '2023-09-05T11:30:32Z', 'amount': 16210.0, 'currency_name': 'Sol', 'currency_code': 'PEN', 'from': 'Счет 58803664561298323391', 'to': 'Счет 39745660563456619397', 'description': 'Перевод организации'}]
+    print(filter_by_currency_csv_xlsx(transactions, currency = "ALL"))
