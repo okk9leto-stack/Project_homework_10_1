@@ -227,3 +227,9 @@ __marimo__/
 #*csv
 ##*.json
 #*.txt
+*.txt
+*.log
+__pycache__/
+.pytest_cache/
+htmlcov/
+.coverage
