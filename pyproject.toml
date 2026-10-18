@@ -1,15 +1,95 @@
-[project]
-name = "project-homework-10-1"
+[tool.poetry]
+name = "project-homework"
 version = "0.1.0"
-description = ""
-authors = [
-    {name = "Oksana Kuznetsova",email = "okk.leto@mail.ru"}
-]
-requires-python = ">=3.14"
-dependencies = [
-]
+description = "My project"
+authors = ["Oksana Kuznetsova <okk.9.leto@gmail.com>"]
+package-mode = false
 
+[tool.poetry.dependencies]
+python = ">=3.13"
+requests = ">=2.33.1"
+python-dotenv = ">=1.2.2"
+pytest = ">=9.0.3"
+more-itertools = ">=11.0.2"
+pandas = "^3.0.5"
+openpyxl = "^3.1.5"
+pandas-stubs = "~=3.0.5"
 
 [build-system]
-requires = ["poetry-core>=2.0.0,<3.0.0"]
+requires = ["poetry-core>=2.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+#[project]
+#name = "project-homework-10-1"
+#version = "0.1.0"
+#description = ""
+#authors = [
+#    {name = "Oksana Kuznetsova",email = "okk.9.leto@gmail.com"}
+#]
+#requires-python = ">=3.13"
+#dependencies = [
+#    "requests (>=2.33.1,<3.0.0)",
+#    "python-dotenv (>=1.2.2,<2.0.0)",
+#    "pytest (>=9.0.3,<10.0.0)",
+#    "more-itertools (>=11.0.2,<12.0.0)"
+#]
+#
+#[tool.poetry]
+#package-mode = true
+#
+#[build-system]
+#requires = ["poetry-core>=2.0.0,<3.0.0"]
+#build-backend = "poetry.core.masonry.api"
+#
+[dependency-groups]
+lint = [
+    "flake8 (>=7.3.0,<8.0.0)",
+    "isort (>=8.0.0,<9.0.0)",
+    "black (>=26.1.0,<27.0.0)",
+    "mypy (>=1.19.1,<2.0.0)"
+]
+dev = [
+    "pytest (>=9.0.2,<10.0.0)",
+    "pytest-cov (>=7.0.0,<8.0.0)",
+    "types-requests (>=2.33.0.20260508,<3.0.0.0)"
+]
+
+[tool.mypy]
+disallow_untyped_defs = true
+no_implicit_optional = true
+warn_return_any = true
+exclude = 'venv'
+#module = ["dotenv.*", "requests.*"]
+ignore_missing_imports = true
+
+[tool.flake8]
+max-line-length = 119
+ignore = "E203, W503"
+exclude = ".git, __pycache__, venv, .venv"
+
+
+[tool.black]
+# Максимальная длина строки
+line-length = 119
+# Файлы, которые не нужно форматировать
+exclude = '''
+(
+  /(
+      \.eggs         # Исключить несколько общих каталогов
+    | \.git          # в корне проекта
+    | \.hg
+    | \.mypy_cache
+    | \.tox
+    | \.venv
+    | dist
+  )/
+  | foo.py           # Также отдельно исключить файл с именем foo.py
+                     # в корне проекта
+) '''
+
+
+[tool.isort]
+# максимальная длина строки
+line_length = 119
+force_single_line = true
+
